@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Domain.Entity;
 
 namespace Areabites
 {
@@ -61,6 +63,13 @@ namespace Areabites
                 option.Configuration = "127.0.0.1";
                 option.InstanceName = "master";
             });
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+            .AddEntityFrameworkStores<DataContext>()
+            .AddDefaultTokenProviders();
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo
