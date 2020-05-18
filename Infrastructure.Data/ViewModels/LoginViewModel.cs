@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Infrastructure.Data.ViewModels
 {
-    class LoginViewModel
+    public class LoginViewModel
     {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

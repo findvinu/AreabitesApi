@@ -15,7 +15,9 @@ namespace Infrastructure.Data
         {
 
         }
-        public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Products> Products { get; set; }
+        public DbSet<Categories> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var typesToRegister = Assembly.Load("Infrastructure.Data").GetTypes().

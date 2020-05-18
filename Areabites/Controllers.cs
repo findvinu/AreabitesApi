@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Infrastructure.Data;
+using Infrastructure.Data.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -40,6 +41,22 @@ namespace Areabites
             }
             return BadRequest(ModelState);
         }
+        [HttpPost]
+        [Route("api/account/login")]
+        public async Task<User> Login([FromBody]LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return null;
+                }
+                return user;
+            }
+            return null;
+        }
+
         [HttpPost(),Route("api/logout")]
         public async Task<IActionResult> Logout()
         {
