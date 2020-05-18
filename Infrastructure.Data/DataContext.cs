@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
@@ -9,6 +10,12 @@ namespace Infrastructure.Data
 {
     public class DataContext:DbContext
     {
+        
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
+
+        }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var typesToRegister = Assembly.Load("Infrastructure.Data").GetTypes().
@@ -20,7 +27,7 @@ namespace Infrastructure.Data
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.ApplyConfiguration(configurationInstance);
             }
-
+            modelBuilder.Entity<User>(entity => { entity.HasKey(e => e.Id); });
             base.OnModelCreating(modelBuilder);
 
         }
