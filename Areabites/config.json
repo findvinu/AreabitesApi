@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "AreabitesConnection": "Server=localhost;Port=3306;Database=Areabites;user id=root;password=Gwendolen1@"
+  }
+}
