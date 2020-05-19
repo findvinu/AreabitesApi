@@ -1,5 +1,10 @@
 {
   "ConnectionStrings": {
     "AreabitesConnection": "Server=localhost;Port=3306;Database=Areabites;user id=root;password=Gwendolen1@"
+  },
+  "Redis-Host": {
+    "RedisServerHost": "127.0.0.1",
+    "RedisServerPassword": "Guarantee1@",
+    "RedisServerPort": "6379"
   }
 }

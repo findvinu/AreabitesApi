@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Infrastructure.Data
@@ -7,6 +8,7 @@ namespace Infrastructure.Data
     public interface IRepository<TEntity> where TEntity:class
     {
         IList<TEntity> GetEntities(bool UseCache = false);
+        IQueryable<TEntity> Table { get; }
         TEntity Insert(TEntity entity);
         void InsertRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);

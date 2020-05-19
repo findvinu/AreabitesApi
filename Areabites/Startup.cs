@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entity;
+using ServiceStack.Redis;
+using ServiceStack.Redis.Generic;
 
 namespace Areabites
 {
@@ -64,6 +66,9 @@ namespace Areabites
                 option.InstanceName = "master";
             });
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            //services.AddSingleton<IRedisClientsManager>(c =>
+            // new RedisManagerPool(config.GetSection("Redis-Host").Value));
+            //services.AddTransient(typeof(IRedisTypedClient<>), typeof(RedisTypedClient<>));
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = false;

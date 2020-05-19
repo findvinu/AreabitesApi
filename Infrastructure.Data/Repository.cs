@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ServiceStack.Redis;
+using ServiceStack.Redis.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,31 +12,32 @@ namespace Infrastructure.Data
     {
         private readonly DataContext _context;
         private DbSet<TEntity> _entities;
-        private RedisClient redisClient { set; get; }
-        public Repository(DataContext context, RedisClient _redisClient)
+        //private RedisClient redisClient { set; get; }
+       // private IRedisTypedClient<TEntity> _redisClient;
+        public Repository(DataContext context)
         {
             _context = context;
-            redisClient = _redisClient;
+           // this._redisClient = _redisClient;
         }
         public IList<TEntity> GetEntities(bool UseCache = false)
         {
 
             List<TEntity> Entities;
-            if (UseCache)
-            {
-                //get content from Cache
-                string key = typeof(TEntity).Name;
+            //if (UseCache)
+            //{
+            //    //get content from Cache
+            //    string key = typeof(TEntity).Name;
 
-                Entities = redisClient.Get<List<TEntity>>(key);
-                if (Entities == null || Entities.Count.Equals(0))
-                {
-                    Entities = this.Entities.ToList();
-                    redisClient.Set(key, Entities, TimeSpan.FromHours(24));
+            //    Entities = redisClient.Get<List<TEntity>>(key);
+            //    if (Entities == null || Entities.Count.Equals(0))
+            //    {
+            //        Entities = this.Entities.ToList();
+            //        redisClient.Set(key, Entities, TimeSpan.FromHours(24));
 
-                }
+            //    }
 
-                return Entities;
-            }
+            //    return Entities;
+            //}
             Entities = this.Entities.ToList();
 
             return Entities;
@@ -45,7 +47,7 @@ namespace Infrastructure.Data
         {
             return this.Entities.Find(id);
         }
-
+        public IQueryable<TEntity> Table => this.Entities;
         public TEntity Insert(TEntity entity)
         {
             if (entity == null)
