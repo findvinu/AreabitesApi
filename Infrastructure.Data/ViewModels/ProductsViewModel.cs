@@ -11,10 +11,12 @@ namespace Infrastructure.Data.ViewModels
     {
         [Required]
         public string Name { get; set; }
-        [Required]
+        [JsonIgnore]
         public Categories Category { get; set; }
+        public string CategoryName { get; set; }
         [JsonIgnore]
         public string ProductCode { get; set; }
+        [JsonIgnore]
         public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         public Products Create()
@@ -23,7 +25,7 @@ namespace Infrastructure.Data.ViewModels
             {
                 Name = Name,
                 ProductCode=ProductCode
-    };
+            };
         }
     }
 }

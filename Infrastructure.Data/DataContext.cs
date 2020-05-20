@@ -1,4 +1,5 @@
 ﻿using Domain.Entity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,7 +9,7 @@ using System.Reflection;
 
 namespace Infrastructure.Data
 {
-    public class DataContext:DbContext
+    public class DataContext: DbContext
     {
         
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -18,6 +19,8 @@ namespace Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<Categories> Categories { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
+        public DbSet<Role> Roles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var typesToRegister = Assembly.Load("Infrastructure.Data").GetTypes().
@@ -29,7 +32,7 @@ namespace Infrastructure.Data
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.ApplyConfiguration(configurationInstance);
             }
-            modelBuilder.Entity<User>(entity => { entity.HasKey(e => e.Id); });
+            modelBuilder.Entity<User>(entity => { entity.HasKey(e => e.ID); });
             base.OnModelCreating(modelBuilder);
 
         }

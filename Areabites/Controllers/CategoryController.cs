@@ -11,33 +11,45 @@ namespace Areabites.Controllers
 {
     public class CategoryController:Controller
     {
-        private IRepository<Categories> _repository;
-        public CategoryController(IRepository<Categories> _repository)
+        private IRepository<Categories> _categoryRepository;
+        public CategoryController(IRepository<Categories> _categoryRepository)
         {
-            this._repository = _repository;
+            this._categoryRepository = _categoryRepository;
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="productsViewModel"></param>
         /// <returns></returns>
-        [HttpPost(), Route("api/products/addProducts")]
+        [HttpPost(), Route("api/products/addCategory")]
         public async Task<ActionResult> AddCategories(CategoriesViewModel categoriesViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var exists= _repository.Table.FirstOrDefault(pl => pl.Name == categoriesViewModel.Name);
+            var exists= _categoryRepository.Table.FirstOrDefault(pl => pl.Name == categoriesViewModel.Name);
             if (exists != null)
             {
                 return BadRequest("Category with name already exists");
             }
-            categoriesViewModel.CategoryCode = $"AR-category{categoriesViewModel.DateModified}";
+            categoriesViewModel.CategoryCode = $"AR-category{categoriesViewModel.DateModified.ToString("yyyyMMddhhmmssfff")}";
             var category = categoriesViewModel.Create();
-            _repository.Insert(category);
+            _categoryRepository.Insert(category);
             return Ok();
+        }
 
+        [HttpPost(), Route("api/products/deleteCategory")]
+        public async Task<ActionResult> DeleteCategory(int ID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var product = _categoryRepository.GetEntityById(ID);
+            if (product == null) return BadRequest("Category with ID not found");
+            _categoryRepository.Remove(product);
+            return Ok();
         }
 
     }

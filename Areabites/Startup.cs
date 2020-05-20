@@ -40,11 +40,7 @@ namespace Areabites
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = config.GetConnectionString("AreabitesConnection");
-            services.AddDbContextPool<DataContext>(
-            cfg =>
-            {
-                cfg.UseMySql(config.GetConnectionString("AreabitesConnection")).EnableSensitiveDataLogging();
-            });
+            
             services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
             services.AddMvcCore()
             .AddDataAnnotations()
@@ -60,21 +56,29 @@ namespace Areabites
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
+            services.AddScoped<IUserStore<User>, UserStore>();
+            services.AddScoped<IRoleStore<UserRole>, RoleStore>();
+            services.AddDbContextPool<DataContext>(
+            cfg =>
+            {
+                cfg.UseMySql(config.GetConnectionString("AreabitesConnection")).EnableSensitiveDataLogging();
+            });
+            services.AddIdentity<User, UserRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+            }).AddDefaultTokenProviders();
             services.AddDistributedRedisCache(option =>
             {
                 option.Configuration = "127.0.0.1";
                 option.InstanceName = "master";
             });
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            //services.AddSingleton<IRedisClientsManager>(c =>
-            // new RedisManagerPool(config.GetSection("Redis-Host").Value));
-            //services.AddTransient(typeof(IRedisTypedClient<>), typeof(RedisTypedClient<>));
-            services.AddIdentity<User, IdentityRole>(options =>
-            {
-                options.User.RequireUniqueEmail = false;
-            })
-            .AddEntityFrameworkStores<DataContext>()
-            .AddDefaultTokenProviders();
+
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo

@@ -9,8 +9,7 @@ namespace Domain.Entity
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime DateModified { get; set; }
-        [JsonIgnore]
+        public string DateModified { get; set; }
         public string ProductCode { get; set; }
         public Categories Category { get; set; }
     }

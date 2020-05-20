@@ -25,20 +25,20 @@ namespace Areabites
         {
             if (ModelState.IsValid)
             {
-                
                 var emailExist = _userManager.FindByEmailAsync(model.Email).Result;
                 var usernameExist = _userManager.FindByEmailAsync(model.Email).Result;
                 if (emailExist == null && usernameExist == null)
                 {
-                    var user = new User {UserName=model.UserName, FirstName = model.FirstName, LastName=model.LastName, Email = model.Email };
+                    var user = new User {FirstName = model.FirstName, LastName=model.LastName, Email = model.Email, PhoneNumber=model.MobileNumber, Address=model.Address, UserName=model.UserName };
                     var result = await _userManager.CreateAsync(user, model.PasswordHash);
                     if (result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _userManager.AddToRoleAsync(user, "User");
+                        await _signInManager.PasswordSignInAsync(user, model.PasswordHash, isPersistent: false, lockoutOnFailure:false);
                         return Ok();
                     }
                 }
-            }
+            } 
             return BadRequest(ModelState);
         }
         [HttpPost]
@@ -63,5 +63,19 @@ namespace Areabites
             await _signInManager.SignOutAsync();
             return Ok();
         }
+
+        [HttpPost(), Route("api/deleteUser")]
+        public async Task<IActionResult> DeleteUser(int ID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var usernameExist = _userManager.FindByIdAsync(ID.ToString()).Result;
+            if (usernameExist == null) return BadRequest("User with ID not found");
+            await _userManager.DeleteAsync(usernameExist);
+            return Ok();
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Entity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,16 +11,20 @@ namespace Infrastructure.Data.ViewModels
     {
         [Required]
         public string Name { get; set; }
+        [JsonIgnore]
         public DateTime DateModified { get; set; } = DateTime.UtcNow;
+        [JsonIgnore]
         public string CategoryCode { get; set; }
-        [Required]
+        [JsonIgnore]
         public List<Products> Products { get; set; }
 
         public Categories Create()
         {
             return new Categories
             {
-                Name = Name
+                Name = Name,
+                CategoryCode=CategoryCode
+                
             };
         }
     }

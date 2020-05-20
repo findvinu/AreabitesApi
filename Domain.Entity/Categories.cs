@@ -9,6 +9,7 @@ namespace Domain.Entity
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Products> Products { get; set; }
+        public string DateModified { get; set; }
         public string CategoryCode { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace Infrastructure.Data
     public interface IRepository<TEntity> where TEntity:class
     {
         IList<TEntity> GetEntities(bool UseCache = false);
+        TEntity GetEntityById(object id);
         IQueryable<TEntity> Table { get; }
         TEntity Insert(TEntity entity);
         void InsertRange(IEnumerable<TEntity> entities);
